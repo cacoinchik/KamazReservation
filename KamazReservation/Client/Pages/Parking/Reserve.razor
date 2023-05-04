@@ -1,0 +1,65 @@
+﻿@page "/parking/reserve"
+@using KamazReservation.Shared.Models
+@inject HttpClient client
+@inject NavigationManager navigate
+
+<PageTitle>Бронирование</PageTitle>
+
+<EditForm Model="@booking" OnValidSubmit="@CreateBooking">
+    <DataAnnotationsValidator />
+    <div>
+        <label>Номер места</label>
+        <InputNumber @bind-Value="@booking.PlaceNumber" />
+    </div>
+
+    <div>
+        <label>Имя</label>
+        <InputText @bind-Value="@booking.Name" />
+    </div>
+
+    <div>
+        <label>Фамилия</label>
+        <InputText @bind-Value="@booking.LastName" />
+    </div>
+
+    <div>
+        <label>Марка автомобиля</label>
+        <InputText @bind-Value="@booking.CarBrand" />
+    </div>
+
+    <div>
+        <label>Модель автомобиля</label>
+        <div>
+            <InputText @bind-Value="@booking.CarModel" />
+        </div>
+    </div>
+
+    <div>
+        <label>Номер автомобиля</label>
+        <InputText @bind-Value="@booking.CarNumber" />
+    </div>
+
+    <div>
+        <label></label>
+        <input type="datetime-local" @bind-value="@booking.StartTime"/>
+    </div>
+
+    <div>
+        <label></label>
+        <input type="datetime-local" @bind-value="@booking.EndTime"/>
+    </div>
+
+    <button type="submit">Забронировать</button>
+
+</EditForm>
+
+@code {
+
+    Booking booking = new Booking();
+
+    async Task CreateBooking()
+    {
+        await client.PostAsJsonAsync("api/parking", booking);
+        navigate.NavigateTo("");
+    }
+}

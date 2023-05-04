@@ -1,0 +1,49 @@
+﻿@page "/register"
+@using KamazReservation.Shared.Models.ViewModels
+@inject HttpClient client
+@inject NavigationManager navigate
+
+<PageTitle>Регистрация</PageTitle>
+
+<h2>Регистрация</h2>
+
+<EditForm Model="@model" OnValidSubmit="@CreateUser">
+    <DataAnnotationsValidator />
+    <div>
+        <label>Имя</label>
+        <InputText @bind-Value="@model.Name"/>
+    </div>
+
+    <div>
+        <label>Фамилия</label>
+        <InputText @bind-Value="@model.LastName"/>
+    </div>
+
+    <div>
+        <label>Логин</label>
+        <InputText @bind-Value="@model.UserName"/>
+    </div>
+
+    <div>
+        <label>Пароль</label>
+        <InputText @bind-Value="@model.Password"/>
+    </div>
+
+    <div>
+        <label>Повторите пароль</label>
+        <InputText @bind-Value="@model.ConfirmPassword"/>
+    </div>
+
+    <button type="submit">Зарегестрироваться</button>
+    
+</EditForm>
+
+@code{
+    RegisterViewModel model = new RegisterViewModel();
+
+    async Task CreateUser()
+    {
+        await client.PostAsJsonAsync("api/account", model);
+        navigate.NavigateTo("profile");
+    }
+}
