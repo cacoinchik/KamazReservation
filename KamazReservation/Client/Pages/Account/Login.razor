@@ -1,0 +1,37 @@
+﻿@page "/login"
+@inject HttpClient client
+@inject NavigationManager navigate
+
+<PageTitle>Авторизация</PageTitle>
+
+<h1>Авторизация</h1>
+<EditForm Model="@model" OnValidSubmit="@loginUser">
+    <DataAnnotationsValidator />
+
+    <div>
+        <label>Логин</label>
+        <InputText @bind-Value="@model.UserName"/>
+    </div>
+
+    <div>
+        <label>Пароль</label>
+        <InputText @bind-Value="@model.Password"/>
+    </div>
+
+    <div>
+        <label>Запонмить меня?</label>
+        <InputCheckbox @bind-Value="@model.RememberMe"/>
+    </div>
+
+    <button type="submit">Авторизоваться</button>
+</EditForm>
+
+@code{
+    LoginViewModel model= new LoginViewModel();
+
+    async Task loginUser()
+    {
+        await client.PostAsJsonAsync("/api/account/login", model);
+        navigate.NavigateTo("profile");
+    }
+}

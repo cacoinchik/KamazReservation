@@ -1,0 +1,33 @@
+﻿@page "/profile"
+@inject HttpClient client
+@inject NavigationManager navigate
+
+@if (user != null)
+{
+    <p>Hello @user.Name</p>
+
+    <button @onclick="@Logout">Выйти из аккаунта</button>
+}
+else
+{
+    <a href="/login">Авторизоваться</a>
+    <br />
+    <a href="/register">Зарегестрироваться</a>
+}
+
+@code {
+
+    User? user { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        user = await client.GetFromJsonAsync<User>("/api/profile");
+    }
+
+    private async Task Logout()
+    {
+        await client.PostAsync("/api/account/logout", null);
+        navigate.NavigateTo("/parking");
+    }
+
+}

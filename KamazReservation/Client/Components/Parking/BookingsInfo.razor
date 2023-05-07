@@ -1,0 +1,41 @@
+﻿@using KamazReservation.Shared.Models.ViewModels
+@inject HttpClient client
+
+<h3>Бронирования места №@ps.Number</h3>
+
+<table>
+    <tr>
+        <th>Бронирование</th>
+        <th>Дата начала</th>
+        <th>Дата окончания</th>
+    </tr>
+    @foreach (var booking in bookings)
+    {
+        <tr>
+            <th>0</th>
+            <th>@booking.StartTime</th>
+            <th>@booking.EndTime</th>
+        </tr>
+    }
+</table>
+
+@code {
+
+    [Parameter]
+    public ParkingViewModels models { get; set; }
+
+    [Parameter]
+    public ParkingSpace ps { get; set; }
+
+    IEnumerable<Booking> bookings { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        bookings = models.bookings.Where(b => b.ParkingSpaceId == ps.Id);
+    }
+    
+
+}
+
+
+

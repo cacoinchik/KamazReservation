@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Components\" />
+    <None Include="Components\Parking\BookingsInfo.razor" />
   </ItemGroup>
 
 </Project>

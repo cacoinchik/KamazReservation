@@ -1,6 +1,4 @@
 ﻿@page "/parking"
-@using KamazReservation.Shared.Models
-@using KamazReservation.Shared.Models.ViewModels
 @inject HttpClient client
 
 <PageTitle>Схема парковки</PageTitle>
@@ -24,69 +22,31 @@ else
 
 @if (isActive)
 {
-    if (ps.IsOccupied==false)
+    if (!ps.IsOccupied)
     {
         <h2>Сейчас это место свободно</h2>
-
-        <h3>Бронирования места №@ps.Number</h3>
-        <table>
-            <tr>
-                <th>тест заголовка</th>
-            </tr>
-            <tr>
-                <th>Бронирование</th>
-                <th>Дата начала</th>
-                <th>Дата окончания</th>
-            </tr>
-            @foreach(var booking in models.bookings)
-            {
-                <tr>
-                    <th>0</th>
-                    <th>@booking.StartTime</th>
-                    <th>@booking.EndTime</th>
-                </tr>
-
-            }
-        </table>
-
-        <a class="btn btn-success" href="parking/reserve">Забронировать</a>
     }
-    else
-    {
-        <h3>Бронирования места №@ps.Number</h3>
-        <table>
-            <tr>
-                <th>Бронирование</th>
-                <th>Дата начала</th>
-                <th>Дата окончания</th>
-            </tr>
-            @foreach(var booking in models.bookings)
-            {
-                <tr>
-                    <th>0</th>
-                    <th>@booking.StartTime</th>
-                    <th>@booking.EndTime</th>
-                </tr>
 
-            }
-        </table>
+    <BookingsInfo models="@models" ps="@ps" />
 
-        <a class="btn btn-success" href="parking/reserve">Забронировать</a>
-    }
+    <a class="btn btn-success" href="parking/reserve">Забронировать</a>
+
 }
 
 
 
 @code {
+
     ParkingViewModels models { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-       models = await client.GetFromJsonAsync<ParkingViewModels>("/api/parking");
+        models = await client.GetFromJsonAsync<ParkingViewModels>("/api/parking");
     }
 
     bool isActive = false;
     ParkingSpace ps;
+
     private void ShowInfo(ParkingSpace selectedSpace)
     {
         if (isActive && ps != selectedSpace)

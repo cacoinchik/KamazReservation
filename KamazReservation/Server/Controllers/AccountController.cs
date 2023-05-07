@@ -1,7 +1,9 @@
-﻿using KamazReservation.Shared.Models;
+﻿using KamazReservation.Server.Data;
+using KamazReservation.Shared.Models;
 using KamazReservation.Shared.Models.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace KamazReservation.Server.Controllers
 {
@@ -18,7 +20,25 @@ namespace KamazReservation.Server.Controllers
             this.signInManager = signInManager;
         }
 
-        [HttpPost]
+        [HttpPost("login")]
+        public async Task<IActionResult> Login(LoginViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = await signInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, false);
+                if (result.Succeeded)
+                {
+                    return Ok();
+                }
+            }
+            else
+            {
+                ModelState.AddModelError("", "Неправильный логин и (или) пароль");
+            }
+            return BadRequest(model);
+        }
+
+        [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
             if (ModelState.IsValid)
@@ -30,7 +50,7 @@ namespace KamazReservation.Server.Controllers
                     LastName = model.LastName
                 };
 
-                var result= await userManager.CreateAsync(user, model.Password);
+                var result = await userManager.CreateAsync(user, model.Password);
 
                 if (result.Succeeded)
                 {
@@ -43,6 +63,13 @@ namespace KamazReservation.Server.Controllers
                 }
             }
             return BadRequest(ModelState);
+        }
+
+        [HttpPost("logout")]
+        public async Task<IActionResult> Logout()
+        {
+            await signInManager.SignOutAsync();
+            return Ok();
         }
     }
 }
