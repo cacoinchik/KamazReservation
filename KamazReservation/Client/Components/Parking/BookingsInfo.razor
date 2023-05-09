@@ -3,19 +3,27 @@
 
 <h3>Бронирования места №@ps.Number</h3>
 
+<div>
+    <label>Дата:</label>
+    <input type="date" @bind="selectDate" />
+</div>
+
 <table>
-    <tr>
-        <th>Бронирование</th>
-        <th>Дата начала</th>
-        <th>Дата окончания</th>
-    </tr>
-    @foreach (var booking in bookings)
-    {
+    <thead>
         <tr>
-            <th>@booking.StartTime</th>
-            <th>@booking.EndTime</th>
+            <th>Время начала бронирования</th>
+            <th>Время конца бронирования</th>
         </tr>
-    }
+    </thead>
+    <tbody>
+        @foreach (var booking in bookings)
+        {
+            <tr>
+                <th>@booking.StartTime.ToString("HH:mm")</th>
+                <th>@booking.EndTime.ToString("HH:mm")</th>
+            </tr>
+        }
+    </tbody>
 </table>
 
 @code {
@@ -26,13 +34,22 @@
     [Parameter]
     public ParkingSpace ps { get; set; }
 
+    [Parameter]
+    public DateTime selectDate { get; set; }
+
     IEnumerable<Booking> bookings { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        bookings = models.bookings.Where(b => b.ParkingSpaceId == ps.Id && b.StartTime.Date == DateTime.Today);
+        bookings = models.bookings.Where(s => s.ParkingSpaceId == ps.Id);
+        SelectDate();
     }
 
+    private void SelectDate()
+    {
+        bookings = bookings.Where(t => t.StartTime.Date == selectDate.Date);
+        bookings = bookings.OrderBy(t => t.StartTime);
+    }
 
 }
 

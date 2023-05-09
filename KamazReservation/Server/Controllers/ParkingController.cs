@@ -40,12 +40,31 @@ namespace KamazReservation.Server.Controllers
                 EndTime = model.EndTime
             };
 
-            booking.ParkingSpaceId = db.ParkingSpaces.FirstOrDefault(x => x.Number == booking.PlaceNumber).Id;
+            if (model.StartTime < DateTime.Now || model.EndTime <= model.StartTime || IsParkingsSpaceFree(model.StartTime,model.EndTime))
+            {
+                return BadRequest();
+            }
+
+            booking.ParkingSpaceId = db.ParkingSpaces.FirstOrDefaultAsync(x => x.Number == booking.PlaceNumber).Id;
 
             db.Bookings.Add(booking);
             await db.SaveChangesAsync();
 
             return Ok();
+        }
+
+        private bool IsParkingsSpaceFree(DateTime start, DateTime finish)
+        {
+            var bookings = db.Bookings.ToList();
+
+            foreach (var booking in bookings)
+            {
+                if (start >= booking.StartTime && finish <= booking.EndTime)
+                    return false;
+                if (finish <= booking.EndTime && finish >= booking.StartTime)
+                    return false;
+            }
+            return true;
         }
     }
 }
