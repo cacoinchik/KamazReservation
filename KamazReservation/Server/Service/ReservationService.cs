@@ -43,7 +43,7 @@ namespace KamazReservation.Server.Service
                     logger.LogError(ex, "Error");
                 }
 
-                await Task.Delay(TimeSpan.FromSeconds(4), stoppingToken);
+                await Task.Delay(TimeSpan.FromSeconds(30), stoppingToken);
             }
         }
     }

@@ -1,0 +1,17 @@
+﻿<h2>Здравствуйте, @user.Name @user.LastName</h2>
+
+<h3>Личные данные</h3>
+<p>Логин: @user.UserName</p>
+<p>Имя: @user.Name</p>
+<p>Фамилия: @user.LastName</p>
+
+<h3>Данные об автомобиле</h3>
+<p>Марка: @user.CarBrand</p>
+<p>Модель: @user.CarModel</p>
+<p>Номер автомобиля: @user.CarNumber</p>
+
+@code {
+    [Parameter]
+    public User user { get; set; }
+
+}

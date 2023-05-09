@@ -12,7 +12,6 @@
     @foreach (var booking in bookings)
     {
         <tr>
-            <th>0</th>
             <th>@booking.StartTime</th>
             <th>@booking.EndTime</th>
         </tr>
@@ -31,9 +30,9 @@
 
     protected override async Task OnInitializedAsync()
     {
-        bookings = models.bookings.Where(b => b.ParkingSpaceId == ps.Id);
+        bookings = models.bookings.Where(b => b.ParkingSpaceId == ps.Id && b.StartTime.Date == DateTime.Today);
     }
-    
+
 
 }
 

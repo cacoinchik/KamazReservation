@@ -1,4 +1,5 @@
 ﻿@page "/register"
+@using Microsoft.AspNetCore.Identity
 @inject HttpClient client
 @inject NavigationManager navigate
 
@@ -10,39 +11,60 @@
     <DataAnnotationsValidator />
     <div>
         <label>Имя</label>
-        <InputText @bind-Value="@model.Name"/>
+        <InputText @bind-Value="@model.Name" />
+        <ValidationMessage For="@(()=>model.Name)"/>
     </div>
 
     <div>
         <label>Фамилия</label>
-        <InputText @bind-Value="@model.LastName"/>
+        <InputText @bind-Value="@model.LastName" />
+        <ValidationMessage For="@(()=>model.LastName)"/>
     </div>
 
     <div>
         <label>Логин</label>
-        <InputText @bind-Value="@model.UserName"/>
+        <InputText @bind-Value="@model.UserName" />
+        <ValidationMessage For="@(()=>model.UserName)"/>
     </div>
 
     <div>
         <label>Пароль</label>
-        <InputText @bind-Value="@model.Password"/>
+        <InputText @bind-Value="@model.Password" />
+        <ValidationMessage For="@(()=>model.Password)"/>
     </div>
 
     <div>
         <label>Повторите пароль</label>
-        <InputText @bind-Value="@model.ConfirmPassword"/>
+        <InputText @bind-Value="@model.ConfirmPassword" />
+        <ValidationMessage For="@(()=>model.ConfirmPassword)"/>
     </div>
 
     <button type="submit">Зарегестрироваться</button>
-    
+
 </EditForm>
 
-@code{
+@if (ErrorMessage!=null)
+{
+    <div>
+        <p>@ErrorMessage</p>
+    </div>
+}
+
+@code {
+
+    public string ErrorMessage { get; set; }
     RegisterViewModel model = new RegisterViewModel();
 
     async Task CreateUser()
     {
-        await client.PostAsJsonAsync("/api/account/register", model);
-        navigate.NavigateTo("profile");
+        var response = await client.PostAsJsonAsync("/api/account/register", model);
+        if (response.IsSuccessStatusCode)
+        {
+            navigate.NavigateTo("profile");
+        }
+        else
+        {
+            ErrorMessage = "Не удалось зарегестрироваться";
+        }
     }
 }

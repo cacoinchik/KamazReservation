@@ -4,48 +4,56 @@
 
 <PageTitle>Бронирование</PageTitle>
 
-<EditForm Model="@booking" OnValidSubmit="@CreateBooking">
+<EditForm Model="@model" OnValidSubmit="@CreateBooking">
     <DataAnnotationsValidator />
     <div>
         <label>Номер места</label>
-        <InputNumber @bind-Value="@booking.PlaceNumber" />
+        <input @bind-value="@model.PlaceNumber"/>
+        <ValidationMessage For="@(()=>model.PlaceNumber)"/>
     </div>
 
     <div>
         <label>Имя</label>
-        <InputText @bind-Value="@booking.Name" />
+        <InputText @bind-Value="@model.Name" />
+         <ValidationMessage For="@(()=>model.Name)"/>
     </div>
 
     <div>
         <label>Фамилия</label>
-        <InputText @bind-Value="@booking.LastName" />
+        <InputText @bind-Value="@model.LastName" />
+         <ValidationMessage For="@(()=>model.LastName)"/>
     </div>
 
     <div>
         <label>Марка автомобиля</label>
-        <InputText @bind-Value="@booking.CarBrand" />
+        <InputText @bind-Value="@model.CarBrand" />
+         <ValidationMessage For="@(()=>model.CarBrand)"/>
     </div>
 
     <div>
         <label>Модель автомобиля</label>
         <div>
-            <InputText @bind-Value="@booking.CarModel" />
+            <InputText @bind-Value="@model.CarModel" />
+             <ValidationMessage For="@(()=>model.CarModel)"/>
         </div>
     </div>
 
     <div>
         <label>Номер автомобиля</label>
-        <InputText @bind-Value="@booking.CarNumber" />
+        <InputText @bind-Value="@model.CarNumber" />
+         <ValidationMessage For="@(()=>model.CarNumber)"/>
     </div>
 
     <div>
         <label></label>
-        <input type="datetime-local" @bind-value="@booking.StartTime"/>
+        <input type="datetime-local" @bind-value="@model.StartTime" />
+         <ValidationMessage For="@(()=>model.StartTime)"/>
     </div>
 
     <div>
         <label></label>
-        <input type="datetime-local" @bind-value="@booking.EndTime"/>
+        <input type="datetime-local" @bind-value="@model.EndTime" />
+         <ValidationMessage For="@(()=>model.EndTime)"/>
     </div>
 
     <button type="submit">Забронировать</button>
@@ -54,11 +62,11 @@
 
 @code {
 
-    Booking booking = new Booking();
+    BookingViewModel model = new BookingViewModel();
 
     async Task CreateBooking()
     {
-        await client.PostAsJsonAsync("api/parking", booking);
+        await client.PostAsJsonAsync("api/parking", model);
         navigate.NavigateTo("");
     }
 }

@@ -26,11 +26,25 @@ namespace KamazReservation.Server.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Reserve(Booking booking)
+        public async Task<IActionResult> Reserve(BookingViewModel model)
         {
+            var booking = new Booking
+            {
+                PlaceNumber = model.PlaceNumber,
+                Name = model.Name,
+                LastName = model.LastName,
+                CarBrand = model.CarBrand,
+                CarModel = model.CarModel,
+                CarNumber = model.CarNumber,
+                StartTime = model.StartTime,
+                EndTime = model.EndTime
+            };
+
             booking.ParkingSpaceId = db.ParkingSpaces.FirstOrDefault(x => x.Number == booking.PlaceNumber).Id;
+
             db.Bookings.Add(booking);
             await db.SaveChangesAsync();
+
             return Ok();
         }
     }

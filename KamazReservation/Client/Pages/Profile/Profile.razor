@@ -2,14 +2,17 @@
 @inject HttpClient client
 @inject NavigationManager navigate
 
+<PageTitle>Личный кабинет</PageTitle>
+
 @if (user != null)
 {
-    <p>Hello @user.Name</p>
+    <ProfileContent user="@user"/>
 
     <button @onclick="@Logout">Выйти из аккаунта</button>
 }
 else
 {
+
     <a href="/login">Авторизоваться</a>
     <br />
     <a href="/register">Зарегестрироваться</a>
@@ -21,7 +24,15 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        user = await client.GetFromJsonAsync<User>("/api/profile");
+        try
+        {
+            user = await client.GetFromJsonAsync<User>("/api/profile");
+        }
+        catch(Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+
     }
 
     private async Task Logout()
