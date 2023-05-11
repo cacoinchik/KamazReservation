@@ -5,33 +5,43 @@
 <PageTitle>Авторизация</PageTitle>
 
 <h1>Авторизация</h1>
+@if (Error)
+{
+    <p>Неправильный логин и(или) пароль</p>
+}
 <EditForm Model="@model" OnValidSubmit="@loginUser">
     <DataAnnotationsValidator />
 
     <div>
         <label>Логин</label>
-        <InputText @bind-Value="@model.UserName"/>
+        <InputText @bind-Value="@model.UserName" />
     </div>
 
     <div>
         <label>Пароль</label>
-        <InputText @bind-Value="@model.Password"/>
+        <InputText @bind-Value="@model.Password" />
     </div>
 
     <div>
         <label>Запонмить меня?</label>
-        <InputCheckbox @bind-Value="@model.RememberMe"/>
+        <InputCheckbox @bind-Value="@model.RememberMe" />
     </div>
 
     <button type="submit">Авторизоваться</button>
 </EditForm>
 
-@code{
-    LoginViewModel model= new LoginViewModel();
+@code {
+
+    LoginViewModel model = new LoginViewModel();
+
+    bool Error;
 
     async Task loginUser()
     {
-        await client.PostAsJsonAsync("/api/account/login", model);
-        navigate.NavigateTo("profile");
+        var result = await client.PostAsJsonAsync("/api/account/login", model);
+        if (result.IsSuccessStatusCode)
+            navigate.NavigateTo("profile");
+        Error = true;
+
     }
 }

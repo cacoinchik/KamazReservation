@@ -63,6 +63,7 @@ namespace KamazReservation.Server.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ParkingSpaceId = table.Column<int>(type: "int", nullable: false),
                     PlaceNumber = table.Column<int>(type: "int", nullable: false),
+                    UserName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CarBrand = table.Column<string>(type: "nvarchar(max)", nullable: false),

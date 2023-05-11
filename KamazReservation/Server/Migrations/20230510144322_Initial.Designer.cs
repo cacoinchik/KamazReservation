@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace KamazReservation.Server.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230503093109_Initial")]
+    [Migration("20230510144322_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -64,6 +64,10 @@ namespace KamazReservation.Server.Migrations
 
                     b.Property<DateTime>("StartTime")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 

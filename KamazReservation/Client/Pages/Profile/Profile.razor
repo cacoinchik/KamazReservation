@@ -38,7 +38,7 @@ else
     private async Task Logout()
     {
         await client.PostAsync("/api/account/logout", null);
-        navigate.NavigateTo("/parking");
+        navigate.NavigateTo("/");
     }
 
 }

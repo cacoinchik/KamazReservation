@@ -31,6 +31,7 @@ namespace KamazReservation.Server.Controllers
             var booking = new Booking
             {
                 PlaceNumber = model.PlaceNumber,
+                UserName = model.UserName,
                 Name = model.Name,
                 LastName = model.LastName,
                 CarBrand = model.CarBrand,
@@ -40,12 +41,17 @@ namespace KamazReservation.Server.Controllers
                 EndTime = model.EndTime
             };
 
-            if (model.StartTime < DateTime.Now || model.EndTime <= model.StartTime || IsParkingsSpaceFree(model.StartTime,model.EndTime))
+            TimeSpan duration = model.EndTime - model.StartTime;
+
+            if (model.StartTime < DateTime.Now
+                || model.EndTime <= model.StartTime
+                || duration.TotalHours < 1
+                || duration.TotalHours > 8)
             {
                 return BadRequest();
             }
 
-            booking.ParkingSpaceId = db.ParkingSpaces.FirstOrDefaultAsync(x => x.Number == booking.PlaceNumber).Id;
+            booking.ParkingSpaceId = db.ParkingSpaces.FirstOrDefault(x => x.Number == booking.PlaceNumber).Id;
 
             db.Bookings.Add(booking);
             await db.SaveChangesAsync();

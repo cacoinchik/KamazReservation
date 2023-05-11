@@ -37,10 +37,8 @@
 
     <div>
         <label>Модель автомобиля</label>
-        <div>
-            <InputText @bind-Value="@model.CarModel" />
-            <ValidationMessage For="@(()=>model.CarModel)" />
-        </div>
+        <InputText @bind-Value="@model.CarModel" />
+        <ValidationMessage For="@(()=>model.CarModel)" />
     </div>
 
     <div>
@@ -50,13 +48,13 @@
     </div>
 
     <div>
-        <label></label>
+        <label>Дата и время начала бронирования</label>
         <input type="datetime-local" @bind-value="@model.StartTime" />
         <ValidationMessage For="@(()=>model.StartTime)" />
     </div>
 
     <div>
-        <label></label>
+        <label>Дата и время конца бронирования</label>
         <input type="datetime-local" @bind-value="@model.EndTime" />
         <ValidationMessage For="@(()=>model.EndTime)" />
     </div>
@@ -69,7 +67,27 @@
 
     BookingViewModel model = new BookingViewModel();
 
+    User user { get; set; }
+
     bool Error { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+        try
+        {
+            user = await client.GetFromJsonAsync<User>("/api/profile");
+            model.Name = user.Name;
+            model.LastName = user.LastName;
+            model.CarBrand = user.CarBrand;
+            model.CarModel = user.CarModel;
+            model.CarNumber = user.CarNumber;
+            model.UserName = user.UserName;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+    }
 
     async Task CreateBooking()
     {

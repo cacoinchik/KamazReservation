@@ -3,11 +3,13 @@ using KamazReservation.Server.Service;
 using KamazReservation.Shared.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using MudBlazor.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
+builder.Services.AddMudServices();
 
 string connection = builder.Configuration.GetConnectionString(name: "DefaultConnection");
 builder.Services.AddDbContext<AppDbContext>(opttions => opttions.UseSqlServer(connection));

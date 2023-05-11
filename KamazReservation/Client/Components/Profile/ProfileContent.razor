@@ -1,4 +1,6 @@
-﻿<h2>Здравствуйте, @user.Name @user.LastName</h2>
+﻿@inject HttpClient client
+
+<h2>Здравствуйте, @user.Name @user.LastName</h2>
 
 <h3>Личные данные</h3>
 <p>Логин: @user.UserName</p>
@@ -10,8 +12,39 @@
 <p>Модель: @user.CarModel</p>
 <p>Номер автомобиля: @user.CarNumber</p>
 
+<h3>Ваши бронирования</h3>
+@if (models.bookings != null)
+{
+    foreach (var booking in models.bookings)
+    {
+        <p>@booking.PlaceNumber</p>
+        <p>@booking.StartTime</p>
+        <p>@booking.EndTime</p>
+    }
+}
+else
+{
+    <text>История ваших броинрвоаний пуста</text>
+}
+
+
 @code {
     [Parameter]
     public User user { get; set; }
+
+    ParkingViewModels? models { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+        try
+        {
+            models = await client.GetFromJsonAsync<ParkingViewModels>("/api/parking");
+            models.bookings = models.bookings.Where(u => u.UserName == user.UserName);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+    }
 
 }

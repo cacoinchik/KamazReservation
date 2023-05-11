@@ -31,10 +31,6 @@ namespace KamazReservation.Server.Controllers
                     return Ok();
                 }
             }
-            else
-            {
-                ModelState.AddModelError("", "Неправильный логин и (или) пароль");
-            }
             return BadRequest(model);
         }
 

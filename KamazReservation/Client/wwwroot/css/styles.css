@@ -1,0 +1,19 @@
+﻿.parking-space {
+    width: 100px;
+    height: 50px;
+    border: 1px solid black;
+    display: inline-block;
+    margin-right: 5px;
+    text-align: center;
+    color: white;
+    vertical-align: middle;
+    font-size: 20px;
+}
+
+.free {
+    background-color: green;
+}
+
+.occupied {
+    background-color: red;
+}
