@@ -19,10 +19,14 @@ namespace KamazReservation.Server.Controllers
         [HttpGet]
         public async Task<IActionResult> GetPs()
         {
-            ParkingViewModels models = new ParkingViewModels();
-            models.parkingSpaces = await db.ParkingSpaces.ToListAsync();
-            models.bookings = await db.Bookings.ToListAsync();
-            return Ok(models);
+            return Ok(await db.ParkingSpaces.ToListAsync());
+        }
+
+        [HttpGet("{bookings}")]
+        public async Task<IActionResult> GetBooking()
+        {
+
+            return Ok(await db.Bookings.ToListAsync());
         }
 
         [HttpPost]

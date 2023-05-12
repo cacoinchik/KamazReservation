@@ -1,0 +1,139 @@
+﻿@inject HttpClient client
+@inject NavigationManager navigate
+@inject ISnackbar Snackbar
+
+<div style="text-align: center">
+    <MudButton Variant="Variant.Filled" Color="Color.Info" OnClick="@(()=>OpenReserveDrawer(Anchor.Bottom))">Забронировать</MudButton>
+
+    <MudDrawer @bind-Open="@open" Anchor="@anchor" Elevation="1" Variant="@DrawerVariant.Temporary">
+        <MudDrawerHeader>
+            <MudText Typo="Typo.h6">Бронирование места</MudText>
+        </MudDrawerHeader>
+        <MudDrawerContainer>
+
+            @if (Error)
+            {
+                <h3>Проверьте правильность заполнения полей</h3>
+            }
+
+            <EditForm Model="@model" OnValidSubmit="@CreateBooking">
+                <DataAnnotationsValidator />
+                <div>
+                    <label>Номер места</label>
+                    <input value="@PlaceNumber" readonly />
+                    <ValidationMessage For="@(()=>model.PlaceNumber)" />
+                </div>
+
+                <div>
+                    <label>Имя</label>
+                    <InputText @bind-Value="@model.Name" />
+                    <ValidationMessage For="@(()=>model.Name)" />
+                </div>
+
+                <div>
+                    <label>Фамилия</label>
+                    <InputText @bind-Value="@model.LastName" />
+                    <ValidationMessage For="@(()=>model.LastName)" />
+                </div>
+
+                <div>
+                    <label>Марка автомобиля</label>
+                    <InputText @bind-Value="@model.CarBrand" />
+                    <ValidationMessage For="@(()=>model.CarBrand)" />
+                </div>
+
+                <div>
+                    <label>Модель автомобиля</label>
+                    <InputText @bind-Value="@model.CarModel" />
+                    <ValidationMessage For="@(()=>model.CarModel)" />
+                </div>
+
+                <div>
+                    <label>Номер автомобиля</label>
+                    <InputText @bind-Value="@model.CarNumber" />
+                    <ValidationMessage For="@(()=>model.CarNumber)" />
+                </div>
+
+                <div>
+                    <label>Дата и время начала бронирования</label>
+                    <input type="datetime-local" @bind-value="@model.StartTime" />
+                    <ValidationMessage For="@(()=>model.StartTime)" />
+                </div>
+
+                <div>
+                    <label>Дата и время конца бронирования</label>
+                    <input type="datetime-local" @bind-value="@model.EndTime" />
+                    <ValidationMessage For="@(()=>model.EndTime)" />
+                </div>
+
+                <MudButton Variant="Variant.Filled" Size="Size.Medium" Color="Color.Tertiary" ButtonType="ButtonType.Submit">Забронировать</MudButton>
+
+            </EditForm>
+        </MudDrawerContainer>
+    </MudDrawer>
+</div>
+
+@code {
+
+    bool open;
+    Anchor anchor;
+
+    void OpenReserveDrawer(Anchor anchor)
+    {
+        if (user == null)
+        {
+            Snackbar.Add("Для бронирования необходимо зарегестрироваться",Severity.Error);
+        }
+        else
+        {
+            open = true;
+            this.anchor = anchor;
+        }
+    }
+
+    [Parameter]
+    public int PlaceNumber { get; set; }
+
+    BookingViewModel model = new BookingViewModel();
+
+    User user { get; set; }
+
+    bool Error { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+        try
+        {
+            user = await client.GetFromJsonAsync<User>("/api/profile");
+            model.Name = user.Name;
+            model.LastName = user.LastName;
+            model.CarBrand = user.CarBrand;
+            model.CarModel = user.CarModel;
+            model.CarNumber = user.CarNumber;
+            model.UserName = user.UserName;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+    }
+
+    async Task CreateBooking()
+    {
+        try
+        {
+            model.PlaceNumber = PlaceNumber;
+            var result = await client.PostAsJsonAsync("api/parking", model);
+            if (result.IsSuccessStatusCode)
+            {
+                navigate.NavigateTo("");
+            }
+            Error = true;
+
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error", ex.Message);
+        }
+    }
+}

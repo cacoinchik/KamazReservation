@@ -13,9 +13,9 @@
 <p>Номер автомобиля: @user.CarNumber</p>
 
 <h3>Ваши бронирования</h3>
-@if (models.bookings != null)
+@if (userBookings != null)
 {
-    foreach (var booking in models.bookings)
+    foreach (var booking in userBookings)
     {
         <p>@booking.PlaceNumber</p>
         <p>@booking.StartTime</p>
@@ -32,19 +32,21 @@ else
     [Parameter]
     public User user { get; set; }
 
-    ParkingViewModels? models { get; set; }
+    IEnumerable<Booking>? userBookings { get; set; }
 
     protected async override Task OnInitializedAsync()
     {
         try
         {
-            models = await client.GetFromJsonAsync<ParkingViewModels>("/api/parking");
-            models.bookings = models.bookings.Where(u => u.UserName == user.UserName);
+            userBookings = await client.GetFromJsonAsync<IEnumerable<Booking>>("/api/parking/bookings");
+            if (userBookings != null)
+            {
+                userBookings = userBookings.Where(u => u.UserName == user.UserName);
+            }
         }
         catch (Exception ex)
         {
             Console.WriteLine(ex.Message);
         }
     }
-
 }

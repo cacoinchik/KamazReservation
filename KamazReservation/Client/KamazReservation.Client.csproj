@@ -20,7 +20,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="Components\Common\Loading.razor" />
     <None Include="Components\Parking\BookingsInfo.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\images\" />
   </ItemGroup>
 
 </Project>
