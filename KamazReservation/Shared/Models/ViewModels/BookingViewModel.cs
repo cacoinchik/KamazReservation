@@ -10,25 +10,25 @@ namespace KamazReservation.Shared.Models.ViewModels
         [Required]
         public string UserName { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Введите ваше имя")]
         public string Name { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Введите вашу фамилию")]
         public string LastName { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Введите бренд вашего автомобиля")]
         public string CarBrand { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Введите модель вашего автомобиля")]
         public string CarModel { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Введите номер вашего автомобиля")]
         public string CarNumber { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Укажите дату и время начала бронирования")]
         public DateTime StartTime { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Укажите дату и время конца бронирования")]
         public DateTime EndTime { get; set; }
     }
 }

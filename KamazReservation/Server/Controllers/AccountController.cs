@@ -25,7 +25,7 @@ namespace KamazReservation.Server.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result = await signInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, false);
+                var result = await signInManager.PasswordSignInAsync(model.UserName, model.Password, false, false);
                 if (result.Succeeded)
                 {
                     return Ok();

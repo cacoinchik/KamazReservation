@@ -14,6 +14,7 @@ namespace KamazReservation.Shared.Models
         public string CarNumber { get; set; }
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
+        public bool IsActive { get; set; }
        
     }
 }

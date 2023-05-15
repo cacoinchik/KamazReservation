@@ -4,10 +4,10 @@ namespace KamazReservation.Shared.Models.ViewModels
 {
     public class LoginViewModel
     {
-        [Required]
+        [Required(ErrorMessage ="Введите ваш логин")]
         public string UserName { get; set; }
 
-        [Required]
+        [Required(ErrorMessage ="Введите ваш пароль")]
         [DataType(DataType.Password)]
         public string Password { get; set; }
 

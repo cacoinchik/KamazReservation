@@ -16,6 +16,7 @@ builder.Services.AddDbContext<AppDbContext>(opttions => opttions.UseSqlServer(co
 builder.Services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<AppDbContext>();
 
 builder.Services.AddHostedService<ReservationService>();
+builder.Services.AddHostedService<BookingActivityService>();
 
 var app = builder.Build();
 

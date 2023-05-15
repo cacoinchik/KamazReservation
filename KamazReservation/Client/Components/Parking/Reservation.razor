@@ -6,68 +6,55 @@
     <MudButton Variant="Variant.Filled" Color="Color.Info" OnClick="@(()=>OpenReserveDrawer(Anchor.Bottom))">Забронировать</MudButton>
 
     <MudDrawer @bind-Open="@open" Anchor="@anchor" Elevation="1" Variant="@DrawerVariant.Temporary">
-        <MudDrawerHeader>
-            <MudText Typo="Typo.h6">Бронирование места</MudText>
-        </MudDrawerHeader>
-        <MudDrawerContainer>
+        
+        <h6>Бронирование места</h6> <br/>
 
-            @if (Error)
-            {
-                <h3>Проверьте правильность заполнения полей</h3>
-            }
+        <MudDrawerContainer>
 
             <EditForm Model="@model" OnValidSubmit="@CreateBooking">
                 <DataAnnotationsValidator />
-                <div>
-                    <label>Номер места</label>
-                    <input value="@PlaceNumber" readonly />
-                    <ValidationMessage For="@(()=>model.PlaceNumber)" />
+                <div style="display: flex; flex-direction: column; align-items: center;">
+                    <div style="width: 100%; max-width: 300px;">
+                        <div>
+                            <MudTextField Label="Номер места" Value="@PlaceNumber" For="@(()=>model.PlaceNumber)" Disabled="true" Variant="Variant.Outlined" />
+                        </div>
+
+                        <div>
+                            <MudTextField Label="Имя" @bind-Value="@model.Name" For="@(()=>model.Name)" Variant="Variant.Outlined" />
+                        </div>
+
+                        <div>
+                            <MudTextField Label="Фамилия" @bind-Value="@model.LastName" For="@(()=>model.LastName)" Variant="Variant.Outlined" />
+                        </div>
+
+                        <div>
+                            <MudTextField Label="Марка автомобиля" @bind-Value="@model.CarBrand" For="@(()=>model.CarBrand)" Variant="Variant.Outlined" />
+                        </div>
+
+                        <div>
+                            <MudTextField Label="Модель автомобиля" @bind-Value="@model.CarModel" For="@(()=>model.CarModel)" Variant="Variant.Outlined" />
+                        </div>
+
+                        <div>
+                            <MudTextField Label="Номер автомобиля" @bind-Value="@model.CarNumber" For="@(()=>model.CarNumber)" Variant="Variant.Outlined" />
+                        </div> <br/>
+
+                        <div>
+                            <label>Дата и время начала бронирования</label>
+                            <input type="datetime-local" @bind-value="@model.StartTime" />
+                            <ValidationMessage For="@(()=>model.StartTime)" />
+                        </div> <br/>
+
+                        <div>
+                            <label>Дата и время конца бронирования</label>
+                            <input type="datetime-local" @bind-value="@model.EndTime" />
+                            <ValidationMessage For="@(()=>model.EndTime)" />
+                        </div> <br/>
+
+                    </div>
+
+                    <MudButton Variant="Variant.Filled" Size="Size.Medium" Color="Color.Tertiary" ButtonType="ButtonType.Submit">Забронировать</MudButton> <br/>
                 </div>
-
-                <div>
-                    <label>Имя</label>
-                    <InputText @bind-Value="@model.Name" />
-                    <ValidationMessage For="@(()=>model.Name)" />
-                </div>
-
-                <div>
-                    <label>Фамилия</label>
-                    <InputText @bind-Value="@model.LastName" />
-                    <ValidationMessage For="@(()=>model.LastName)" />
-                </div>
-
-                <div>
-                    <label>Марка автомобиля</label>
-                    <InputText @bind-Value="@model.CarBrand" />
-                    <ValidationMessage For="@(()=>model.CarBrand)" />
-                </div>
-
-                <div>
-                    <label>Модель автомобиля</label>
-                    <InputText @bind-Value="@model.CarModel" />
-                    <ValidationMessage For="@(()=>model.CarModel)" />
-                </div>
-
-                <div>
-                    <label>Номер автомобиля</label>
-                    <InputText @bind-Value="@model.CarNumber" />
-                    <ValidationMessage For="@(()=>model.CarNumber)" />
-                </div>
-
-                <div>
-                    <label>Дата и время начала бронирования</label>
-                    <input type="datetime-local" @bind-value="@model.StartTime" />
-                    <ValidationMessage For="@(()=>model.StartTime)" />
-                </div>
-
-                <div>
-                    <label>Дата и время конца бронирования</label>
-                    <input type="datetime-local" @bind-value="@model.EndTime" />
-                    <ValidationMessage For="@(()=>model.EndTime)" />
-                </div>
-
-                <MudButton Variant="Variant.Filled" Size="Size.Medium" Color="Color.Tertiary" ButtonType="ButtonType.Submit">Забронировать</MudButton>
-
             </EditForm>
         </MudDrawerContainer>
     </MudDrawer>
@@ -82,7 +69,7 @@
     {
         if (user == null)
         {
-            Snackbar.Add("Для бронирования необходимо зарегестрироваться",Severity.Error);
+            Snackbar.Add("Для бронирования необходимо зарегестрироваться", Severity.Error);
         }
         else
         {
@@ -96,7 +83,7 @@
 
     BookingViewModel model = new BookingViewModel();
 
-    User user { get; set; }
+    User? user { get; set; }
 
     bool Error { get; set; }
 
@@ -128,7 +115,7 @@
             {
                 navigate.NavigateTo("");
             }
-            Error = true;
+            Snackbar.Add("Error",Severity.Error);
 
         }
         catch (Exception ex)

@@ -1,34 +1,33 @@
 ﻿@page "/login"
 @inject HttpClient client
 @inject NavigationManager navigate
+@inject ISnackbar Snackbar
 
 <PageTitle>Авторизация</PageTitle>
 
-<h1>Авторизация</h1>
-@if (Error)
-{
-    <p>Неправильный логин и(или) пароль</p>
-}
 <EditForm Model="@model" OnValidSubmit="@loginUser">
     <DataAnnotationsValidator />
-
-    <div>
-        <label>Логин</label>
-        <InputText @bind-Value="@model.UserName" />
+    <div style="display: flex; justify-content: center; align-items: center; height: 100vh;">
+        <MudGrid Style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
+            <MudCard Style="width: 300px;">
+                <MudCardHeader Style="text-align: center">
+                    <CardHeaderContent>
+                        <MudText Typo="Typo.h5">Авторизация</MudText>
+                    </CardHeaderContent>
+                </MudCardHeader>
+                <MudCardContent>
+                    <MudTextField Label="Логин" @bind-Value="model.UserName" For="@(()=>model.UserName)" />
+                    <MudTextField Label="Пароль" @bind-Value="model.Password" InputType="InputType.Password" For="@(()=>model.Password)" />
+                </MudCardContent> <br />
+                <MudCardActions Style="justify-content: center">
+                    <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Submit" Color="Color.Info">Авторизоваться</MudButton>
+                </MudCardActions>
+            </MudCard>
+        </MudGrid>
     </div>
-
-    <div>
-        <label>Пароль</label>
-        <InputText @bind-Value="@model.Password" />
-    </div>
-
-    <div>
-        <label>Запонмить меня?</label>
-        <InputCheckbox @bind-Value="@model.RememberMe" />
-    </div>
-
-    <button type="submit">Авторизоваться</button>
 </EditForm>
+
+
 
 @code {
 
@@ -41,7 +40,7 @@
         var result = await client.PostAsJsonAsync("/api/account/login", model);
         if (result.IsSuccessStatusCode)
             navigate.NavigateTo("profile");
-        Error = true;
-
+        else
+            Snackbar.Add("Неправильный логин и(или) пароль", Severity.Error);
     }
 }
