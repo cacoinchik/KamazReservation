@@ -2,5 +2,36 @@
 
 <PageTitle>Главная страница</PageTitle>
 
-<h1>Hello, world!</h1>
+<MudCarousel Class="mud-width-full" Style="height: 450px" ShowArrows="false" AutoCycle="true" ShowBullets="true" TData="object">
+    <MudCarouselItem Transition="transition" Color="Color.Info">
+        <div class="d-flex" style="height:100%; text-align: center; background-image: url('images/parking-photo.png')">
+            <div class="carousel-caption">
+                <h2>Забудьте о проблемах с парковкой! Бронируйте удобное место прямо сейчас</h2>
+            </div>
+        </div>
+    </MudCarouselItem>
+    <MudCarouselItem Transition="transition" Color="Color.Info">
+        <div class="d-flex" style="height:100%">
+            <div class="carousel-caption">
+                <h2>Никогда больше не теряйте время на поиск парковки. Бронируйте места заранее и приезжайте с уверенностью!</h2>
+            </div>
+        </div>
+    </MudCarouselItem>
+</MudCarousel>
+
+<section class="rectangle-section">
+    <div class="content">
+        <div class="image-wrapper">
+            <img src="/images/parking-photo.png" alt="">
+        </div>
+        <div class="text-wrapper">
+            <h2>Заголовок секции</h2>
+            <p>Текст секции...</p>
+        </div>
+    </div>
+</section>
+
+@code {
+    private Transition transition = Transition.Slide;
+}
 

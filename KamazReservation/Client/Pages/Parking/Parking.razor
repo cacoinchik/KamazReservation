@@ -1,15 +1,27 @@
 ﻿@page "/parking"
 @inject HttpClient client
+@inject ISnackbar s
 
 <PageTitle>Схема парковки</PageTitle>
 
 <h1>Схема парковки</h1>
 
-@if (parkingSpaces != null)
+<div style="width: 400px;">
+    <MudDatePicker Label="Дата" @bind-Date="selectDate" PickerClosed="OnDateChanged"></MudDatePicker>
+</div>
+<br />
+
+@if (parking != null)
 {
-    @foreach (var space in parkingSpaces)
+    @foreach (var space in parking)
     {
-        <button class="parking-space @((space.IsOccupied) ? "occupied" : "free")" @onclick="()=>ShowInfo(space)">@space.Number</button>
+        if (space.IsFree)
+            info = "free";
+        else if (space.IsOccupied)
+            info = "occupied";
+        else if (space.IsWithBooking)
+            info = "with-bookings";
+        <button class="parking-space @info" @onclick="()=>ShowInfo(space)">@space.Number</button>
     }
 }
 else
@@ -17,41 +29,57 @@ else
     <MudProgressCircular Color="Color.Info" Indeterminate="true" />
 }
 
-
 @if (isActive)
 {
-    if (!ps.IsOccupied)
-    {
-        <h2>Сейчас это место свободно</h2>
-    }
 
-    <BookingsInfo ps="@ps" selectDate="@DateTime.Today" />
+    <BookingsInfo ps="@ps" selectDate="@selectDate" />
+
+    <br />
 
     <Reservation PlaceNumber="@ps.Number" />
 }
 
 
 @code {
+    public string info;
+    DateTime? selectDate = DateTime.Today;
 
-    IEnumerable<ParkingSpace>? parkingSpaces {get;set;}
+    IEnumerable<ParkingSpace>? parkingSpaces { get; set; }
+    IEnumerable<ParkingInfo> parking { get; set; }
+    IEnumerable<Booking> bookings { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
             parkingSpaces = await client.GetFromJsonAsync<IEnumerable<ParkingSpace>>("/api/parking");
+            bookings = await client.GetFromJsonAsync<List<Booking>>("/api/parking/booking");
+            parking = ParkingInfo.DrawParking(parkingSpaces, bookings, selectDate);
+
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+    }
+
+    private void OnDateChanged()
+    {
+        try
+        {
+            parking = ParkingInfo.DrawParking(parkingSpaces, bookings, selectDate);
+            s.Add($"here {selectDate}");
         }
         catch(Exception ex)
         {
             Console.WriteLine(ex.Message);
         }
-
     }
 
     bool isActive = false;
     ParkingSpace ps;
 
-    private void ShowInfo(ParkingSpace selectedSpace)
+    private void ShowInfo(ParkingInfo selectedSpace)
     {
         if (isActive && ps != selectedSpace)
         {

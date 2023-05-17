@@ -3,11 +3,12 @@
 @inject ISnackbar Snackbar
 
 <div style="text-align: center">
+
     <MudButton Variant="Variant.Filled" Color="Color.Info" OnClick="@(()=>OpenReserveDrawer(Anchor.Bottom))">Забронировать</MudButton>
 
     <MudDrawer @bind-Open="@open" Anchor="@anchor" Elevation="1" Variant="@DrawerVariant.Temporary">
-        
-        <h6>Бронирование места</h6> <br/>
+
+        <h5>Бронирование места</h5> <br />
 
         <MudDrawerContainer>
 
@@ -37,23 +38,23 @@
 
                         <div>
                             <MudTextField Label="Номер автомобиля" @bind-Value="@model.CarNumber" For="@(()=>model.CarNumber)" Variant="Variant.Outlined" />
-                        </div> <br/>
+                        </div> <br />
 
                         <div>
                             <label>Дата и время начала бронирования</label>
                             <input type="datetime-local" @bind-value="@model.StartTime" />
                             <ValidationMessage For="@(()=>model.StartTime)" />
-                        </div> <br/>
+                        </div> <br />
 
                         <div>
                             <label>Дата и время конца бронирования</label>
                             <input type="datetime-local" @bind-value="@model.EndTime" />
                             <ValidationMessage For="@(()=>model.EndTime)" />
-                        </div> <br/>
+                        </div> <br />
 
                     </div>
 
-                    <MudButton Variant="Variant.Filled" Size="Size.Medium" Color="Color.Tertiary" ButtonType="ButtonType.Submit">Забронировать</MudButton> <br/>
+                    <MudButton Variant="Variant.Filled" Size="Size.Medium" Color="Color.Tertiary" ButtonType="ButtonType.Submit">Забронировать</MudButton> <br />
                 </div>
             </EditForm>
         </MudDrawerContainer>
@@ -98,6 +99,8 @@
             model.CarModel = user.CarModel;
             model.CarNumber = user.CarNumber;
             model.UserName = user.UserName;
+            model.StartTime = DateTime.Today;
+            model.EndTime = DateTime.Today;
         }
         catch (Exception ex)
         {
@@ -115,7 +118,10 @@
             {
                 navigate.NavigateTo("");
             }
-            Snackbar.Add("Error",Severity.Error);
+            else
+            {
+                Snackbar.Add("Проверьте правильность заполнения полей, возможно место на указанное время занято", Severity.Error);
+            }
 
         }
         catch (Exception ex)

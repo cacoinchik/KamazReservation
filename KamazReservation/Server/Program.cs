@@ -15,7 +15,6 @@ string connection = builder.Configuration.GetConnectionString(name: "DefaultConn
 builder.Services.AddDbContext<AppDbContext>(opttions => opttions.UseSqlServer(connection));
 builder.Services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<AppDbContext>();
 
-builder.Services.AddHostedService<ReservationService>();
 builder.Services.AddHostedService<BookingActivityService>();
 
 var app = builder.Build();

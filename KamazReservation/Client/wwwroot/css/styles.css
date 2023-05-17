@@ -17,3 +17,7 @@
 .occupied {
     background-color: red;
 }
+
+.with-bookings {
+    background-color: yellow;
+}
