@@ -11,18 +11,25 @@
 </div>
 <br />
 
-@if (parking != null)
+@if (parkingInfos != null)
 {
-    @foreach (var space in parking)
-    {
-        if (space.IsFree)
-            info = "free";
-        else if (space.IsOccupied)
-            info = "occupied";
-        else if (space.IsWithBooking)
-            info = "with-bookings";
-        <button class="parking-space @info" @onclick="()=>ShowInfo(space)">@space.Number</button>
-    }
+    <div class="parking-scheme">
+        @foreach (var row in Rows)
+        {
+            <div class="parking-row">
+                @foreach (var space in row)
+                {
+                    if (space.IsFree)
+                        info = "free";
+                    else if (space.IsOccupied)
+                        info = "occupied";
+                    else if (space.IsWithBooking)
+                        info = "with-bookings";
+                    <button class="parking-space @info" @onclick="()=>ShowInfo(space)">@space.Number</button>
+                }
+            </div>
+        }
+    </div>
 }
 else
 {
@@ -48,13 +55,15 @@ else
     IEnumerable<ParkingInfo> parking { get; set; }
     IEnumerable<Booking> bookings { get; set; }
 
+    List<ParkingInfo> parkingInfos = new List<ParkingInfo>();
+
     protected override async Task OnInitializedAsync()
     {
         try
         {
             parkingSpaces = await client.GetFromJsonAsync<IEnumerable<ParkingSpace>>("/api/parking");
             bookings = await client.GetFromJsonAsync<List<Booking>>("/api/parking/booking");
-            parking = ParkingInfo.DrawParking(parkingSpaces, bookings, selectDate);
+            parkingInfos = ParkingInfo.DrawParking(parkingSpaces, bookings, selectDate);
 
         }
         catch (Exception ex)
@@ -63,14 +72,17 @@ else
         }
     }
 
+    private List<List<ParkingInfo>> Rows => parkingInfos.GroupBy(s => s.Row).Select(g => g.ToList()).ToList();
+
+
+
     private void OnDateChanged()
     {
         try
         {
             parking = ParkingInfo.DrawParking(parkingSpaces, bookings, selectDate);
-            s.Add($"here {selectDate}");
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             Console.WriteLine(ex.Message);
         }

@@ -1,0 +1,56 @@
+﻿@page "/admin"
+@inject HttpClient client
+
+<h1>Adminka</h1>
+
+@if (parkingSpaces == null)
+{
+    <MudProgressCircular Color="Color.Info" Indeterminate="true" />
+}
+else
+{
+    <MudTable Bordered="true" Items="@parkingSpaces" Filter="new Func<ParkingSpace, bool>(FilterFunc1)">
+        <ToolBarContent>
+            <MudText Typo="Typo.h6">Парковочные места</MudText>
+            <MudSpacer />
+            <MudTextField @bind-Value="searchString" Placeholder="Поиск" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        </ToolBarContent>
+        <HeaderContent>
+            <MudTh>Номер места</MudTh>
+            <MudTh>Ряд</MudTh>
+            <MudTh></MudTh>
+            <MudTh></MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd>@context.Number</MudTd>
+            <MudTd>@context.Row</MudTd>
+            <MudTd><a class="btn btn-success" href="developer/edit/@context.Id">Edit</a></MudTd>
+            <MudTd><button class="btn btn-success">Удалить</button></MudTd>
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager />
+        </PagerContent>
+    </MudTable>
+}
+
+@code {
+    private string searchString = "";
+
+    IEnumerable<ParkingSpace> parkingSpaces { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+        parkingSpaces = await client.GetFromJsonAsync<List<ParkingSpace>>("api/parking");
+    }
+
+    private bool FilterFunc1(ParkingSpace parkingSpace) => FilterFunc(parkingSpace, searchString);
+
+    private bool FilterFunc(ParkingSpace parkingSpace, string searchString)
+    {
+        if (string.IsNullOrWhiteSpace(searchString))
+            return true;
+        if ($"{parkingSpace.Number} {parkingSpace.Row}".Contains(searchString))
+            return true;
+        return false;
+    }
+}

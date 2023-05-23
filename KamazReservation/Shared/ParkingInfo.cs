@@ -17,6 +17,7 @@ namespace KamazReservation.Shared
                 {
                     Id = parkingSpace.Id,
                     Number = parkingSpace.Number,
+                    Row=parkingSpace.Row,
                     IsFree = true
                 };
 
@@ -24,10 +25,10 @@ namespace KamazReservation.Shared
             }
             foreach (var booking in bookings)
             {
-                if (booking.StartTime.Date==selectDay)
+                if (booking.StartTime.Date == selectDay)
                 {
                     var p = parking.FirstOrDefault(x => x.Id == booking.ParkingSpaceId);
-                    if(p != null)
+                    if (p != null)
                     {
                         p.IsWithBooking = true;
                         p.IsFree = false;

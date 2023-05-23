@@ -19,8 +19,8 @@
                     <MudTextField Label="Имя" @bind-Value="model.Name" For="@(()=>model.Name)" />
                     <MudTextField Label="Фамилия" @bind-Value="model.LastName" For="@(()=>model.LastName)" />
                     <MudTextField Label="Логин" @bind-Value="model.UserName" For="@(()=>model.UserName)" />
-                    <MudTextField Label="Пароль" @bind-Value="model.Password" For="@(()=>model.Password)" />
-                    <MudTextField Label="Повторите ваш пароль" @bind-Value="model.ConfirmPassword" For="@(()=>model.ConfirmPassword)" />
+                    <MudTextField Label="Пароль" @bind-Value="model.Password" InputType="InputType.Password" For="@(()=>model.Password)" />
+                    <MudTextField Label="Повторите ваш пароль" @bind-Value="model.ConfirmPassword" InputType="InputType.Password" For="@(()=>model.ConfirmPassword)" />
                 </MudCardContent> <br />
                 <MudCardActions Style="justify-content: center">
                     <MudButton Variant="Variant.Filled" Color="Color.Info" ButtonType="ButtonType.Submit">Зарегестрироваться</MudButton>
