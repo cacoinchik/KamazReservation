@@ -1,0 +1,15 @@
+﻿@page "/admin/create"
+@inject HttpClient client
+@inject NavigationManager navigate
+
+<Form HeaderText="Создание парковочного места" space="@space" OnValidSubmit="@CreateSpace"/>
+
+@code{
+    ParkingSpace space = new ParkingSpace();
+    async Task CreateSpace()
+    {
+        await client.PostAsJsonAsync("api/parking/ps", space);
+        navigate.NavigateTo("/admin");
+    }
+}
+

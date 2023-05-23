@@ -67,7 +67,7 @@ else
     {
         try
         {
-            userBookings = await client.GetFromJsonAsync<IEnumerable<Booking>>("/api/parking/bookings");
+            userBookings = await client.GetFromJsonAsync<IEnumerable<Booking>>("/api/booking");
             if (userBookings != null)
             {
                 userBookings = userBookings.OrderBy(t => t.StartTime);

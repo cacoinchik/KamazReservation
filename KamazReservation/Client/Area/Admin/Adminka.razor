@@ -1,5 +1,6 @@
 ﻿@page "/admin"
 @inject HttpClient client
+@inject IJSRuntime runtime
 
 <h1>Adminka</h1>
 
@@ -24,8 +25,8 @@ else
         <RowTemplate>
             <MudTd>@context.Number</MudTd>
             <MudTd>@context.Row</MudTd>
-            <MudTd><a class="btn btn-success" href="developer/edit/@context.Id">Edit</a></MudTd>
-            <MudTd><button class="btn btn-success">Удалить</button></MudTd>
+            <MudTd><a class="btn btn-primary" href="admin/edit/@context.Id">Изменить</a></MudTd>
+            <MudTd><MudButton OnClick="@(()=>Delete(context.Id))" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Delete" Color="Color.Error">Удалить</MudButton></MudTd>
         </RowTemplate>
         <PagerContent>
             <MudTablePager />
@@ -52,5 +53,17 @@ else
         if ($"{parkingSpace.Number} {parkingSpace.Row}".Contains(searchString))
             return true;
         return false;
+    }
+
+    MudDialog deleteDialog;
+
+    void ShowDeleteDialog() => deleteDialog.Show();
+
+    async Task Delete(int spaceId)
+    {
+        var space = parkingSpaces.First(s => s.Id == spaceId);
+        await client.DeleteAsync($"api/parking/{spaceId}");
+        await OnInitializedAsync();
+
     }
 }

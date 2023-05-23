@@ -1,0 +1,23 @@
+﻿@page "/admin/edit/{spaceId:int}"
+@inject HttpClient client
+@inject NavigationManager navigate
+
+<Form HeaderText="Редактирование парковочного места" space="@space" OnValidSubmit="@EditSpace"/>
+
+@code{
+    [Parameter]
+    public int spaceId { get; set; }
+
+    ParkingSpace space = new ParkingSpace();
+
+    protected override async Task OnParametersSetAsync()
+    {
+        space = await client.GetFromJsonAsync<ParkingSpace>($"api/parking/{spaceId}");
+    }
+
+    async Task EditSpace()
+    {
+        await client.PutAsJsonAsync("api/parking", space);
+        navigate.NavigateTo("/admin");
+    }
+}

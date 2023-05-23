@@ -1,0 +1,34 @@
+﻿<EditForm Model="@space" OnValidSubmit="@OnValidSubmit">
+    <DataAnnotationsValidator />
+
+    <div>
+         <MudGrid Style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
+            <MudCard Style="width: 600px;">
+                <MudCardHeader Style="text-align: center">
+                    <CardHeaderContent>
+                        <MudText Typo="Typo.h5">@HeaderText</MudText>
+                    </CardHeaderContent>
+                </MudCardHeader>
+                <MudCardContent>
+                    <MudTextField Label="Номер места" @bind-Value="space.Number" For="@(()=>space.Number)" />
+                    <MudTextField Label="Ряд" @bind-Value="space.Row" For="@(()=>space.Row)" />
+                        </MudCardContent> <br />
+                <MudCardActions Style="justify-content: center">
+                    <MudButton Variant="Variant.Filled" Color="Color.Info" ButtonType="ButtonType.Submit">Сохранить</MudButton>
+                </MudCardActions>
+            </MudCard>
+        </MudGrid>
+    </div>
+</EditForm>
+
+@code{
+    [Parameter]
+    public ParkingSpace space { get; set; }
+
+    [Parameter]
+    public string? HeaderText { get; set; } 
+
+    [Parameter]
+    public EventCallback OnValidSubmit { get; set; }
+
+}

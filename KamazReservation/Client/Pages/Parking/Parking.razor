@@ -16,6 +16,7 @@
     <div class="parking-scheme">
         @foreach (var row in Rows)
         {
+            <h2>Ряд</h2>
             <div class="parking-row">
                 @foreach (var space in row)
                 {
@@ -62,7 +63,7 @@ else
         try
         {
             parkingSpaces = await client.GetFromJsonAsync<IEnumerable<ParkingSpace>>("/api/parking");
-            bookings = await client.GetFromJsonAsync<List<Booking>>("/api/parking/booking");
+            bookings = await client.GetFromJsonAsync<List<Booking>>("/api/booking");
             parkingInfos = ParkingInfo.DrawParking(parkingSpaces, bookings, selectDate);
 
         }

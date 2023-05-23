@@ -113,7 +113,7 @@
         try
         {
             model.PlaceNumber = PlaceNumber;
-            var result = await client.PostAsJsonAsync("api/parking", model);
+            var result = await client.PostAsJsonAsync("api/booking", model);
             if (result.IsSuccessStatusCode)
             {
                 navigate.NavigateTo("");

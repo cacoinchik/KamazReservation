@@ -29,7 +29,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        bookings = await client.GetFromJsonAsync<IEnumerable<Booking>>("/api/parking/bookings");
+        bookings = await client.GetFromJsonAsync<IEnumerable<Booking>>("/api/booking");
         bookings = bookings?.Where(s => s.ParkingSpaceId == ps.Id);
         SelectDate();
     }
