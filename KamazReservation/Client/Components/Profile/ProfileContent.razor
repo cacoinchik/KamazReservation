@@ -1,4 +1,5 @@
 ﻿@inject HttpClient client
+@inject ISnackbar snackbar
 
 <h2>Здравствуйте, @user.Name @user.LastName</h2>
 
@@ -20,33 +21,45 @@
 <h3>Ваши бронирования</h3>
 @if (userBookings != null)
 {
-    foreach (var booking in userBookings)
-    {
-        <p>@booking.PlaceNumber</p>
-        <p>@booking.StartTime</p>
-        <p>@booking.EndTime</p>
-    }
+    <MudDataGrid Items="@userBookings" Bordered="true" Groupable="false" Filterable="false" SortMode="@SortMode.None">
+        <Columns>
+            <PropertyColumn Property="x=>x.PlaceNumber" />
+            <PropertyColumn Property="x=>x.StartTime" />
+            <PropertyColumn Property="x=>x.EndTime" />
+            <TemplateColumn>
+                <CellTemplate>
+                    <MudStack Row>
+                        <MudButton OnClick="()=>CancelBooking(context.Item)" Variant="Variant.Filled" Color="Color.Warning">Отменить бронирование</MudButton>
+                    </MudStack>
+                </CellTemplate>
+            </TemplateColumn>
+        </Columns>
+    </MudDataGrid>
+    <br />
 
     <MudExpansionPanels>
         <MudExpansionPanel Text="История бронирований">
-            <table>
-                <thead>
-                    <tr>
-                        <th>№</th>
-                        <th>фа</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var booking in archivBookings)
-                    {
-                        <tr>
-                            <th>@booking.Name</th>
-                            <th>@booking.StartTime</th>
-                            <th>@booking.EndTime</th>
-                        </tr>
-                    }
-                </tbody>
-            </table>
+            @if (archivBookings != null)
+            {
+                <MudTable Items="@archivBookings" Bordered="true">
+                    <HeaderContent>
+                        <MudTh>Номер парковочного места</MudTh>
+                        <MudTh>Начало броинрования</MudTh>
+                        <MudTh>Конец бронирвоания</MudTh>
+                        <MudTh>Статус бронирования</MudTh>
+                    </HeaderContent>
+                    <RowTemplate>
+                        <MudTd>@context.PlaceNumber</MudTd>
+                        <MudTd>@context.StartTime</MudTd>
+                        <MudTd>@context.EndTime</MudTd>
+                        <MudTd>@context.Status</MudTd>
+                    </RowTemplate>
+                </MudTable>
+            }
+            else
+            {
+                <h3>История бронирований пуста</h3>
+            }
         </MudExpansionPanel>
     </MudExpansionPanels>
 }
@@ -80,4 +93,17 @@ else
             Console.WriteLine(ex.Message);
         }
     }
+
+    async Task CancelBooking(Booking booking)
+    {
+        booking.Status = "Отменен";
+        booking.IsActive = false;
+        var result = await client.PutAsJsonAsync("api/booking", booking);
+        if (result.IsSuccessStatusCode)
+        {
+            snackbar.Add("Бронирование отменено", Severity.Success);
+        }
+
+    }
+
 }

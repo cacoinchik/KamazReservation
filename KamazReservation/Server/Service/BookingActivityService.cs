@@ -21,9 +21,10 @@ namespace KamazReservation.Server.Service
                     var bookings = db.Bookings.ToList();
                     foreach (var booking in bookings)
                     {
-                        if (booking.EndTime < DateTime.Now)
+                        if (booking.EndTime < DateTime.Now || booking.Status!=null)
                         {
                             booking.IsActive = false;
+                            booking.Status = "Завершено";
                         }
                         else
                         {
@@ -38,7 +39,7 @@ namespace KamazReservation.Server.Service
                     logger.LogError(ex, "Error");
                 }
 
-                await Task.Delay(TimeSpan.FromHours(1), stoppingToken);
+                await Task.Delay(TimeSpan.FromSeconds(10), stoppingToken);
             }
         }
     }

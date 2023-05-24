@@ -1,10 +1,12 @@
 ﻿@page "/parking"
 @inject HttpClient client
-@inject ISnackbar s
 
 <PageTitle>Схема парковки</PageTitle>
 
-<h1>Схема парковки</h1>
+<div style="text-align: center">
+    <MudText Typo="Typo.h2">Схема парковки</MudText>
+</div>
+
 
 <div style="width: 400px;">
     <MudDatePicker Label="Дата" @bind-Date="selectDate" PickerClosed="OnDateChanged"></MudDatePicker>
@@ -16,7 +18,7 @@
     <div class="parking-scheme">
         @foreach (var row in Rows)
         {
-            <h2>Ряд</h2>
+            <h6>Ряд</h6>
             <div class="parking-row">
                 @foreach (var space in row)
                 {
@@ -49,11 +51,11 @@ else
 
 
 @code {
+
     public string info;
     DateTime? selectDate = DateTime.Today;
 
     IEnumerable<ParkingSpace>? parkingSpaces { get; set; }
-    IEnumerable<ParkingInfo> parking { get; set; }
     IEnumerable<Booking> bookings { get; set; }
 
     List<ParkingInfo> parkingInfos = new List<ParkingInfo>();
@@ -81,7 +83,8 @@ else
     {
         try
         {
-            parking = ParkingInfo.DrawParking(parkingSpaces, bookings, selectDate);
+            parkingInfos = ParkingInfo.DrawParking(parkingSpaces, bookings, selectDate);
+
         }
         catch (Exception ex)
         {

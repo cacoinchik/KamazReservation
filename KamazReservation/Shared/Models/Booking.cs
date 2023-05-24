@@ -15,6 +15,7 @@ namespace KamazReservation.Shared.Models
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
         public bool IsActive { get; set; }
-       
+        public string? Status { get; set; }
+
     }
 }

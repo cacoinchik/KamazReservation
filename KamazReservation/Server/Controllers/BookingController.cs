@@ -56,5 +56,13 @@ namespace KamazReservation.Server.Controllers
             return Ok();
         }
 
+        [HttpPut]
+        public async Task<IActionResult> CancelBooking(Booking booking)
+        {
+            db.Entry(booking).State = EntityState.Modified;
+            await db.SaveChangesAsync();
+            return NoContent();
+        }
+
     }
 }
